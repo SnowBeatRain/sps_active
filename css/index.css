@@ -15,24 +15,25 @@
   width: 100%;
   height: 11rem;
   background-color: #f1f1f1;
-  box-shadow: 0px -1.5px 1.5px -2px #a50000 inset;
+  box-shadow: 0px -1px 1px -1px #a50000 inset;
   z-index: 5;
   overflow: hidden;
   position: relative;
 }
 
-.sanjiao{
+.sanjiao {
   position: absolute;
-  width: 3rem;
-  height: 3rem;
-  left: calc(50% - 1.5rem);
-  bottom: -1.5rem;
+  width: 2rem;
+  height: 2rem;
+  left: calc(50% - 1rem);
+  bottom: -1rem;
   transform: rotate(45deg);
   transform-origin: center center;
   background-color: #fff;
   z-index: 10;
-  box-shadow: 0px 0px 1.5px #a50000 inset;  
+  box-shadow: 0px 0px 1.5px #a50000 inset;
 }
+
 /*  */
 
 .getTicket {
@@ -49,6 +50,7 @@
   font-size: 1.7rem;
   letter-spacing: 0.2rem;
   background-color: #f01a16;
+  cursor: pointer;
 }
 
 .ruleList {
@@ -62,11 +64,278 @@
   font-size: 1.5rem;
   color: #333;
   margin-bottom: 2.2rem;
+  position: relative;
+}
+
+/*CSS伪类设置横线*/
+
+.ruleList h3:before,
+.ruleList h3:after {
+  content: '';
+  position: absolute;
+  top: 52%;
+  width: 25%;
+  height: 1px;
+}
+
+/*调整背景横线的左右距离*/
+
+.ruleList h3:before {
+  background: linear-gradient(90deg, #fff, #ccc);
+  left: 5%;
+}
+
+.ruleList h3:after {
+  background: linear-gradient(-90deg, #fff, #ccc);
+  right: 5%;
 }
 
 .ruleList p {
   font-size: 1.4rem;
   color: #666;
-  line-height: 2.5rem;
-  letter-spacing: .2rem;
+  line-height: 3rem;
+}
+
+/* 遮罩层 */
+
+.layer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  background-color: #000;
+  opacity: 0.7;
+  display: none;
+}
+
+.tipMsg {
+  position: fixed;
+  top: calc(50% - 19.3rem);
+  left: calc(50% - 15.4rem);
+  z-index: 150;
+  height: 32.6rem;
+  width: 30.8rem;
+  padding: 0 1.5rem;
+  box-sizing: border-box;
+  border-radius: 1rem;
+  text-align: center;
+  box-shadow: 0px -2px 1.5px #8d0008 inset;
+  background: linear-gradient(#ffad1d, #dd1d31);
+  display: none;
+}
+
+.tipMsg h2 {
+  font-size: 2rem;
+  line-height: 2rem;
+  color: #fff;
+  margin-top: 2.75rem;
+}
+
+.tipMsg .tip1 {
+  font-size: 1.6rem;
+  line-height: 4rem;
+  color: #fff;
+  text-align: center;
+}
+
+.tipMsg .tipTicket {
+  height: 10rem;
+  margin-top: 1rem;
+}
+
+.tipTicket .topLine {
+  width: 100%;
+  height: 0.5rem;
+  border-radius: 0.25rem;
+  background-color: #a90b0c;
+}
+
+.bottomLine {
+  width: 98%;
+  height: 1rem;
+  margin-left: 1%;
+  margin-top: -1%;
+  background-image: url(../img/11.png);
+  background-position: bottom center;
+  background-repeat: no-repeat;
+}
+
+.ticket {
+  padding: 0 1rem;
+  overflow: hidden;
+}
+
+.ticket div {
+  float: left;
+  margin-top: 2.3rem;
+}
+
+.ticket div p {
+  text-align: center;
+}
+
+.ticket div p:nth-child(2) {
+  color: #666;
+  font-size: 1.2rem;
+}
+
+.ticket div .img1 {
+  width: 3.8rem;
+  margin: 0.3rem 0;
+}
+
+.ticket div .img2 {
+  width: 4.5rem;
+  margin-left: 1.2rem;
+  margin-right: 1.2rem;
+}
+
+.ticket div .img3 {
+  margin: 0.3rem 1.4rem;
+}
+
+.imgYes {
+  position: absolute;
+  top: 0;
+  right: 1rem;
+  width: 1.2rem;
+}
+
+.msgInfo {
+  width: 98%;
+  height: 10rem;
+  margin-left: 1%;
+  background-color: #ffeeba;
+  position: relative;
+  top: -2px;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 0 1rem;
+}
+
+.msgInfo  {
+  animation: fadeInDown 3s infinite 1s;
+}
+
+@keyframes fadeInDown {
+  from {
+    top: 0px;
+    height: 0px
+  }
+  to {
+    top: 0px;
+    height: 100px
+  }
+}
+
+.msgInfo>div {
+  display: block;
+  float: left;
+  background-color: #fff;
+}
+
+.freeText {
+  height: 6rem;
+  width: 34%;
+  margin-top: 2rem;
+  border-right: 1px dashed #FF5728;
+  position: relative;
+}
+
+.yuan1,
+.yuan2,
+.yuan3,
+.yuan4 {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  background-color: #ffeeba;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.yuan1 {
+  top: -0.5rem;
+  left: -0.5rem;
+}
+
+.yuan2 {
+  top: -0.5rem;
+  right: -0.5rem;
+}
+
+.yuan3 {
+  bottom: -0.5rem;
+  left: -0.5rem;
+}
+
+.yuan4 {
+  bottom: -0.5rem;
+  right: -0.5rem;
+}
+
+.freeText p {
+  color: #cd0e16;
+  font-size: 2rem;
+  line-height: 6rem;
+}
+
+.freeInfo {
+  height: 6rem;
+  width: 65%;
+  margin-top: 2rem;
+  /* margin-top: 2rem;   */
+  padding-left: 2rem;
+  box-sizing: border-box;
+  line-height: 2rem;
+  position: relative;
+}
+
+.freeInfo h3 {
+  color: #414141;
+  font-size: 1.4rem;
+  text-align: left;
+  margin-top: 1rem;
+}
+
+.freeInfo p {
+  color: #999;
+  font-size: 0.9rem;
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.tipMsg .tip2 {
+  font-size: 1.3rem;
+  line-height: 4rem;
+  color: #fff;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.tipMsg button {
+  cursor: pointer;
+  width: 90%;
+  height: 4.5rem;
+  border-radius: 2rem;
+  color: #f1111d;
+  font-size: 1.6rem;
+  letter-spacing: 0.2rem;
+  box-shadow: 0px -2px 1.5px #cf8306 inset;
+  background-color: #ffca27;
+  margin-top: 1.5rem;
+}
+
+.colse {
+  position: relative;
+  top: 5rem;
+  text-align: center;
+}
+
+.colse img {
+  width: 4.2rem;
+  height: 4.2rem;
+  cursor: pointer;
 }
