@@ -21,6 +21,7 @@
     <div class="ticketList ">
       <div class="ticket">
         <div v-for="(l,i) in allInfo" :key="i">
+          <!-- 判断是第几个 -->
           <p v-if="i==1">
             <img class="img1 img3" src="./img/isget.png" alt="">
           </p>
@@ -80,6 +81,7 @@
     </div>
     <!-- 领取按钮 -->
     <div class="getTicket ">
+      <!-- isGet  true已经领取过 -->
       <button v-if="!isGet" @click="showMask() ">领取停车券</button>
       <button v-else style="background: #9f9f9f">领取停车券</button>
     </div>
@@ -125,7 +127,7 @@
       </div>
       <p class="tip2 ">停车券已存入您的钱包，请在当天使用</p>
       <div>
-        <button>去停车</button>
+        <button @click="goPark()">去停车</button>
       </div>
       <div class="colse ">
         <img src="./img/home_shutdown.png " alt=" ">
@@ -148,10 +150,8 @@
       allInfo: []
     },
     methods: {
+      // 领取弹框展示
       showMask() {
-        $('body').css("overflow", "hidden")
-        $(".layer ").show();
-        $(".tipMsg").fadeIn()
         $.ajax({
           type: 'get',
           url: this.mainurl + '/api/Activity/UserReceiveCoupon?syscouponid=' + this.syscouponid + '&token=' +
@@ -166,10 +166,11 @@
             }
           }.bind(this),
           error: function () {
-            alert(data.Result)
+            alert("错误：请刷新重试")
           }
         });
       },
+      // 获取时间轴
       getInfo() {
         $.ajax({
           type: 'get',
@@ -178,8 +179,8 @@
             if (data.Status == 1) {
               this.syscouponid = data.Result.SysCouponID
               this.allInfo = data.Result.List
-              if (data.Result.SysCouponID[3].IsActivity) {
-                if (data.Result.SysCouponID[3].IsReceived) {
+              if (data.Result.List[3].IsActivity) {
+                if (data.Result.List[3].IsReceived) {
                   // 如果当天活动的优惠券已经领取过
                   this.isGet = true
                 } else {
@@ -194,16 +195,19 @@
             }
           }.bind(this),
           error: function () {
-            alert(data.Result)
+            alert("错误：请刷新重试")
           }
         });
       },
-
+      // goPark 去停车
+      goPark() {
+       // 跳转app页面停车
+      }
     },
     mounted() {
-      // var token = window.location.href.split("token=")[1]
-      var token =
-        "256969AE96502EB054A39A013ADF6F7DCC165301ED6F7FB40795E75F8EEC75A63CACD23D1A9FA696C3BF083D186CF47214C06F5C323B4F8F3AD3C501F49ACB99"
+      var token = window.location.href.split("token=")[1]
+      // var token =
+      //   "256969AE96502EB054A39A013ADF6F7DCC165301ED6F7FB40795E75F8EEC75A63CACD23D1A9FA696C3BF083D186CF47214C06F5C323B4F8F3AD3C501F49ACB99"
       this.token = token
       this.getInfo()
       // 点击关闭
