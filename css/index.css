@@ -216,7 +216,7 @@
 }
 
 .msgInfo  {
-  animation: fadeInDown 3s infinite 1s;
+  animation: fadeInDown 3s forwards 1s;
 }
 
 @keyframes fadeInDown {
