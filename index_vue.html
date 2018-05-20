@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+  <meta http-equiv="X-UA-Compatible " content="ie=edge ">
+  <title>千人计划</title>
+  <link rel="icon" href="./img/logo.png">
+  <link rel="stylesheet " href="./css/common.css ">
+  <link rel="stylesheet " href="./css/index.css ">
+</head>
+
+<body>
+  <div class="container " id="app" v-cloak>
+    <!-- banner -->
+    <div class="banner ">
+      <img src="./img/banner.png " alt=" ">
+    </div>
+    <!-- 优惠券领取滚动 -->
+    <div class="ticketList ">
+      <div class="ticket">
+        <div v-for="(l,i) in allInfo" :key="i">
+          <!-- 判断是第几个 -->
+          <p v-if="i==1">
+            <img class="img1 img3" src="./img/isget.png" alt="">
+          </p>
+          <p v-else-if="i==3" style="position: relative;">
+            <img class="img2" :src="l.IsReceived?'./img/noday.png':'./img/isday.png'" alt="">
+            <img class="imgYes" v-if="l.IsReceived" src="./img/yes.png" alt="">
+          </p>
+          <p v-else-if="i==5">
+            <img class="img1 img3" src="./img/noget.png" alt="">
+          </p>
+          <p v-else-if="i==4||i==6">
+            <img class="img1" src="./img/noget.png" alt="">
+          </p>
+          <p v-else>
+            <img class="img1" src="./img/isget.png" alt="">
+          </p>
+          <p>{{l.Time}}</p>
+        </div>
+        <!-- <div>
+          <p>
+            <img class="img1 img3" src="./img/isget.png" alt="">
+          </p>
+          <p>05.17</p>
+        </div>
+        <div>
+          <p>
+            <img class="img1" src="./img/isget.png" alt="">
+          </p>
+          <p>05.17</p>
+        </div>
+        <div>
+          <p>
+            <img class="img2" src="./img/isday.png" alt="">
+          </p>
+          <p>05.17</p>
+        </div>
+        <div>
+          <p>
+            <img class="img1" src="./img/noget.png" alt="">
+          </p>
+          <p>05.17</p>
+        </div>
+        <div>
+          <p>
+            <img class="img1 img3" src="./img/noget.png" alt="">
+          </p>
+          <p>05.17</p>
+        </div>
+        <div>
+          <p>
+            <img class="img1" src="./img/noget.png" alt="">
+          </p>
+          <p>05.17</p>
+        </div> -->
+      </div>
+      <div class="sanjiao "></div>
+    </div>
+    <!-- 领取按钮 -->
+    <div class="getTicket ">
+      <!-- isGet  true已经领取过 -->
+      <button v-if="!isGet" @click="showMask() " style='background-color: #f01a16;'>领取停车券</button>
+      <button v-else style="background: #9f9f9f">领取停车券</button>
+    </div>
+    <!-- 使用规则 -->
+    <div class="ruleList ">
+      <h3>优惠券使用规则</h3>
+      <p>1.免单券领取时间：2018年5月17日0点开始；</p>
+      <p>2.免单券领取规则：种子用户可在当天0点-24点之间领取免单券，并于当天24点之前使用；</p>
+      <p>3.免单券领取位置：点击APP首页右上角图标，在“通知”中将看到新停车券提示，点击即可领取；</p>
+      <p>4.免单券仅当天有效，逾期作废，仅限单次使用，不可转让，不可找零，不可折现；</p>
+      <p>5.每个用户每个账号每天仅限领取一张；</p>
+      <p>6.免单券最高扣金额100元；</p>
+      <p>7.免单券的使用仅限于SPS停车合作的开通在线支付的停车场（名单会不断更新）；</p>
+      <p>8.使用免单券需要每日领取免单券，并在SPS停车app中绑定车牌、开通无感支付功能。</p>
+    </div>
+    <!-- 领取提示框 -->
+    <div class="layer "></div>
+    <div class="tipMsg ">
+      <h2>恭喜您！</h2>
+      <p class="tip1 ">千人智慧停车计划免费停车券领取成功</p>
+      <div class="tipTicket ">
+        <div class="topLine "></div>
+        <div class="fadeInDown">
+          <div class="msgInfo ">
+            <div class="freeText ">
+              <p>免费</p>
+              <span class="yuan1 "></span>
+              <span class="yuan2 "></span>
+              <span class="yuan3 "></span>
+              <span class="yuan4 "></span>
+            </div>
+            <div class="freeInfo ">
+              <h3>千人计划停车券</h3>
+              <p>有效期{{timeData}}</p>
+              <span class="yuan1"></span>
+              <span class="yuan2"></span>
+              <span class="yuan3"></span>
+              <span class="yuan4"></span>
+            </div>
+          </div>
+          <div class="bottomLine "></div>
+        </div>
+      </div>
+      <p class="tip2 ">停车券已存入您的钱包，请在当天使用</p>
+      <div>
+        <button @click="goPark()">去停车</button>
+      </div>
+      <div class="colse ">
+        <img src="./img/home_shutdown.png " alt=" ">
+      </div>
+    </div>
+  </div>
+</body>
+<script src="./js/fontsize.js "></script>
+<script src="./js/jquery.min.js"></script>
+<script src="./js/vue.min.js"></script>
+<script>
+  var app = new Vue({
+    el: "#app",
+    data: {
+      mainurl: "http://spsapp.spsing.com",
+      syscouponid: "",
+      token: '',
+      timeData:'',
+      // 是否已经领取过   true是  false 否
+      isGet: false,
+      allInfo: []
+    },
+    methods: {
+      // 领取弹框展示
+      showMask() {
+        $.ajax({
+          type: 'get',
+          url: this.mainurl + '/api/Activity/UserReceiveCoupon?syscouponid=' + this.syscouponid + '&token=' +
+            this.token,
+          success: function (data) {
+            if (data.Status == 1) {
+              this.timeData = data.Result.Time
+              $('body').css("overflow", "hidden")
+              $(".layer ").show();
+              $(".tipMsg").fadeIn()
+            } else {
+              alert(data.Result)
+            }
+          }.bind(this),
+          error: function () {
+            alert("错误：请刷新重试")
+          }
+        });
+      },
+      // 获取时间轴
+      getInfo() {
+        $.ajax({
+          type: 'get',
+          url: this.mainurl + '/api/Activity/GetThousandsActivityDate?token=' + this.token,
+          success: function (data) {
+            if (data.Status == 1) {
+              this.syscouponid = data.Result.SysCouponID
+              this.allInfo = data.Result.List
+              if (data.Result.List[3].IsActivity) {
+                if (data.Result.List[3].IsReceived) {
+                  // 如果当天活动的优惠券已经领取过
+                  this.isGet = true
+                } else {
+                  this.isGet = false
+                }
+              } else {
+                // 如果当天活动的优惠券已经结束，则不能领取
+                this.isGet = false
+              }
+            } else {
+              alert(data.Result)
+            }
+          }.bind(this),
+          error: function () {
+            alert("错误：请刷新重试")
+          }
+        });
+      },
+      // goPark 去停车
+      goPark() {
+        // 跳转app页面停车
+        window.location.href = "gotopark.html"
+      }
+    },
+    mounted() {
+      var token = window.location.href.split("token=")[1]
+      // var token =
+      //   "256969AE96502EB054A39A013ADF6F7DCC165301ED6F7FB40795E75F8EEC75A63CACD23D1A9FA696C3BF083D186CF47214C06F5C323B4F8F3AD3C501F49ACB99"
+      this.token = token
+      this.getInfo()
+      // 点击关闭
+      $(".colse img").click(function () {
+        $('body').css("overflow", "visible")
+        $(".layer ").hide();
+        $(".tipMsg").fadeOut()
+      })
+      //alert去除网址
+      var wAlert = window.alert;
+      window.alert = function (message) {
+        try {
+          var iframe = document.createElement("IFRAME");
+          iframe.style.display = "none";
+          // iframe.setAttribute("src", 'data:text/plain,');
+          document.documentElement.appendChild(iframe);
+          var alertFrame = window.frames[0];
+          var iwindow = alertFrame.window;
+          if (iwindow == undefined) {
+            iwindow = alertFrame.contentWindow;
+          }
+          iwindow.alert(message);
+          iframe.parentNode.removeChild(iframe);
+        } catch (exc) {
+          return wAlert(message);
+        }
+      }
+    }
+  })
+</script>
+
+</html>

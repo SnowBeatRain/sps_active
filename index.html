@@ -12,7 +12,7 @@
 </head>
 
 <body>
-  <div class="container " id="app" v-cloak>
+  <div class="container " id="app">
     <!-- banner -->
     <div class="banner ">
       <img src="./img/banner.png " alt=" ">
@@ -20,8 +20,7 @@
     <!-- 优惠券领取滚动 -->
     <div class="ticketList ">
       <div class="ticket">
-        <div v-for="(l,i) in allInfo" :key="i">
-          <!-- 判断是第几个 -->
+        <!-- <div v-for="(l,i) in allInfo" :key="i">
           <p v-if="i==1">
             <img class="img1 img3" src="./img/isget.png" alt="">
           </p>
@@ -39,8 +38,14 @@
             <img class="img1" src="./img/isget.png" alt="">
           </p>
           <p>{{l.Time}}</p>
-        </div>
+        </div> -->
         <!-- <div>
+          <p>
+            <img class="img1" src="./img/isget.png" alt="">
+          </p>
+          <p>05.17</p>
+        </div>
+        <div>
           <p>
             <img class="img1 img3" src="./img/isget.png" alt="">
           </p>
@@ -53,8 +58,9 @@
           <p>05.17</p>
         </div>
         <div>
-          <p>
+          <p style="position: relative;">
             <img class="img2" src="./img/isday.png" alt="">
+            <img class="imgYes" src="./img/yes.png" alt="">
           </p>
           <p>05.17</p>
         </div>
@@ -82,8 +88,8 @@
     <!-- 领取按钮 -->
     <div class="getTicket ">
       <!-- isGet  true已经领取过 -->
-      <button v-if="!isGet" @click="showMask() ">领取停车券</button>
-      <button v-else style="background: #9f9f9f">领取停车券</button>
+      <button class="isget" onclick="showMask()">领取停车券</button>
+      <button class="noget" style="background: #9f9f9f;display: none">领取停车券</button>
     </div>
     <!-- 使用规则 -->
     <div class="ruleList ">
@@ -115,7 +121,7 @@
             </div>
             <div class="freeInfo ">
               <h3>千人计划停车券</h3>
-              <p>有效期2018.5.17-2018-5.17</p>
+              <p class="timeData">有效期</p>
               <span class="yuan1"></span>
               <span class="yuan2"></span>
               <span class="yuan3"></span>
@@ -127,7 +133,7 @@
       </div>
       <p class="tip2 ">停车券已存入您的钱包，请在当天使用</p>
       <div>
-        <button @click="goPark()">去停车</button>
+        <button onclick="goPark()">去停车</button>
       </div>
       <div class="colse ">
         <img src="./img/home_shutdown.png " alt=" ">
@@ -135,111 +141,153 @@
     </div>
   </div>
 </body>
-<!-- <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script> -->
 <script src="./js/fontsize.js "></script>
 <script src="./js/jquery.min.js"></script>
-<script src="./js/vue.min.js"></script>
-<!-- <script src="https://cdn.bootcss.com/vue/2.1.0/vue.min.js"></script> -->
 <script>
-  var app = new Vue({
-    el: "#app",
-    data: {
-      mainurl: "http://spsapp.spsing.com",
-      syscouponid: "",
-      token: '',
-      // 是否已经领取过   true是  false 否
-      isGet: false,
-      allInfo: []
-    },
-    methods: {
-      // 领取弹框展示
-      showMask() {
-        $.ajax({
-          type: 'get',
-          url: this.mainurl + '/api/Activity/UserReceiveCoupon?syscouponid=' + this.syscouponid + '&token=' +
-            this.token,
-          success: function (data) {
-            if (data.Status == 1) {
-              $('body').css("overflow", "hidden")
-              $(".layer ").show();
-              $(".tipMsg").fadeIn()
-            } else {
-              alert(data.Result)
-            }
-          }.bind(this),
-          error: function () {
-            alert("错误：请刷新重试")
-          }
-        });
-      },
-      // 获取时间轴
-      getInfo() {
-        $.ajax({
-          type: 'get',
-          url: this.mainurl + '/api/Activity/GetThousandsActivityDate?token=' + this.token,
-          success: function (data) {
-            if (data.Status == 1) {
-              this.syscouponid = data.Result.SysCouponID
-              this.allInfo = data.Result.List
-              if (data.Result.List[3].IsActivity) {
-                if (data.Result.List[3].IsReceived) {
-                  // 如果当天活动的优惠券已经领取过
-                  this.isGet = true
-                } else {
-                  this.isGet = false
-                }
+  var mainurl = "http://spsapp.spsing.com",
+    syscouponid = "",
+    token = '',
+    timeData = ''
+  var token = window.location.href.split("token=")[1]
+  // var token =
+  //   "256969AE96502EB054A39A013ADF6F7DCC165301ED6F7FB40795E75F8EEC75A63CACD23D1A9FA696C3BF083D186CF47214C06F5C323B4F8F3AD3C501F49ACB99"
+  // this.token = token
+
+  // 获取时间轴
+  getInfo()
+
+  function getInfo() {
+    $.ajax({
+      type: 'get',
+      url: mainurl + '/api/Activity/GetThousandsActivityDate?token=' + token,
+      success: function (data) {
+        if (data.Status == 1) {
+          syscouponid = data.Result.SysCouponID
+          var allInfo = data.Result.List
+          var ll = ""
+          for (var i = 0; i < allInfo.length; i++) {
+            const element = allInfo[i];
+            var i1 = ''
+            var i2 = ''
+            var i3 = ''
+            var i4 = ''
+            var i5 = ''
+            if (i == 1) {
+              i1 = ` <img class="img1 img3" src="./img/isget.png" alt="">`
+            } else if (i == 3) {
+              if (allInfo[i].IsReceived) {
+                i3 =
+                  `<img class="img2" src="./img/noday.png" alt="">
+                    <img class="imgYes" src="./img/yes.png" alt="">
+                   `
               } else {
-                // 如果当天活动的优惠券已经结束，则不能领取
-                this.isGet = false
+                i3 =
+                  `<img class="img2" src="./img/isday.png" alt=""> `
               }
+
+            } else if (i == 5) {
+              i5 = `<img class="img1 img3" src="./img/noget.png" alt="">`
+            } else if (i == 4 || i == 6) {
+              i4 = `<img class="img1" src="./img/noget.png" alt="">`
             } else {
-              alert(data.Result)
+              i2 = ` <img class="img1" src="./img/isget.png" alt="">`
             }
-          }.bind(this),
-          error: function () {
-            alert("错误：请刷新重试")
+            ll +=
+              `
+            <div>
+              <p>${i1}</p>
+              <p style="position: relative;">${i3} </p>
+              <p>${i5}</p>
+              <p>${i4} </p>
+              <p>${i2}</p>
+              <p style='color: #666;font-size: 1.2rem;'>${allInfo[i].Time}</p>
+            </div>
+            `
           }
-        });
-      },
-      // goPark 去停车
-      goPark() {
-        // 跳转app页面停车
-        window.location.href = "gotopark.html"
-      }
-    },
-    mounted() {
-      var token = window.location.href.split("token=")[1]
-      // var token =
-      //   "256969AE96502EB054A39A013ADF6F7DCC165301ED6F7FB40795E75F8EEC75A63CACD23D1A9FA696C3BF083D186CF47214C06F5C323B4F8F3AD3C501F49ACB99"
-      this.token = token
-      this.getInfo()
-      // 点击关闭
-      $(".colse img").click(function () {
-        $('body').css("overflow", "visible")
-        $(".layer ").hide();
-        $(".tipMsg").fadeOut()
-      })
-      //alert去除网址
-      var wAlert = window.alert;
-      window.alert = function (message) {
-        try {
-          var iframe = document.createElement("IFRAME");
-          iframe.style.display = "none";
-          iframe.setAttribute("src", 'data:text/plain,');
-          document.documentElement.appendChild(iframe);
-          var alertFrame = window.frames[0];
-          var iwindow = alertFrame.window;
-          if (iwindow == undefined) {
-            iwindow = alertFrame.contentWindow;
+          $(".ticket").html(ll)
+          if (data.Result.List[3].IsActivity) {
+            if (data.Result.List[3].IsReceived) {
+              // 如果当天活动的优惠券已经领取过
+              $(".isget").hide()
+              $(".noget").show()
+              // $(".getTicket").html("<button style='background-color: #9f9f9'>领取停车券</button>")
+            } else {
+              $(".isget").show()
+              $(".noget").hide()
+              // $(".getTicket").html("<button onclick='showMask()' style='background-color: #f01a16;'>领取停车券</button>")
+            }
+          } else {
+            $(".isget").show()
+            $(".noget").hide()
+            // 如果当天活动的优惠券已经结束，则不能领取
+            // $(".getTicket").html("<button onclick='showMask()' style='background-color: #f01a16;'>领取停车券</button>")
           }
-          iwindow.alert(message);
-          iframe.parentNode.removeChild(iframe);
-        } catch (exc) {
-          return wAlert(message);
+        } else {
+          alert(data.Result)
         }
+      },
+      error: function () {
+        alert("错误：请刷新重试")
       }
-    }
+    });
+  };
+
+  // 领取弹框展示
+  function showMask() {
+
+    $.ajax({
+      type: 'get',
+      url: mainurl + '/api/Activity/UserReceiveCoupon?syscouponid=' + syscouponid + '&token=' +
+        token,
+      success: function (data) {
+        if (data.Status == 1) {
+          // this.timeData = data.Result.Time
+          $('body').css("overflow", "hidden")
+          $(".layer ").show();
+          $(".tipMsg").fadeIn()
+          $(".timeData").text("有效期" + data.Result.Time)
+
+        } else {
+          alert(data.Result)
+        }
+      }.bind(this),
+      error: function () {
+        alert("错误：请刷新重试")
+      }
+    });
+  };
+  // goPark 去停车
+  function goPark() {
+    // 跳转app页面停车
+    window.location.href = "gotopark.html"
+  }
+
+
+  // 点击关闭
+  $(".colse img").click(function () {
+    $('body').css("overflow", "visible")
+    $(".layer ").hide();
+    $(".tipMsg").fadeOut()
   })
+  //alert去除网址
+  var wAlert = window.alert;
+  window.alert = function (message) {
+    try {
+      var iframe = document.createElement("IFRAME");
+      iframe.style.display = "none";
+      // iframe.setAttribute("src", 'data:text/plain,');
+      document.documentElement.appendChild(iframe);
+      var alertFrame = window.frames[0];
+      var iwindow = alertFrame.window;
+      if (iwindow == undefined) {
+        iwindow = alertFrame.contentWindow;
+      }
+      iwindow.alert(message);
+      iframe.parentNode.removeChild(iframe);
+    } catch (exc) {
+      return wAlert(message);
+    }
+  }
 </script>
 
 </html>
