@@ -103,13 +103,13 @@
           for (var i = 0; i < allInfo.length; i++) {
             const element = allInfo[i];
             var i1 = '';
-            var i2 = ''
-            var i3 = ''
-            var i4 = ''
-            var i5 = ''
-            if (i == 1) {
+            var i2 = '';
+            var i3 = '';
+            var i4 = '';
+            var i5 = '';
+            if (i === 1) {
               i1 = "<img class='img1 img3' src='./img/isget.png' alt=''>"
-            } else if (i == 3) {
+            } else if (i === 3) {
               if (allInfo[i].IsReceived) {
                 i3 =
                   "<img class='img2' src='./img/noday.png' alt=''><img class='imgYes' src='./img/yes.png' alt=''>"
@@ -118,9 +118,9 @@
                   "<img class='img2' src='./img/isday.png' alt=''>"
               }
 
-            } else if (i == 5) {
+            } else if (i === 5) {
               i5 = "<img class='mg1 img3' src='./img/noget.png' alt=''>"
-            } else if (i == 4 || i == 6) {
+            } else if (i === 4 || i === 6) {
               i4 = "<img class='img1' src='./img/noget.png' alt=''>"
             } else {
               i2 = "<img class='img1' src='./img/isget.png' alt=''>"
